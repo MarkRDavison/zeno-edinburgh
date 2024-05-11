@@ -7,49 +7,47 @@ public static class IEndpointRouteBuilderExtensions
         this IEndpointRouteBuilder endpoints,
         string apiEndpoint)
     {
-        var transformer = HttpTransformer.Default;
-        var requestConfig = new ForwarderRequestConfig
+        endpoints.Map("/api/{**catchall}", async (
+            HttpContext context,
+            [FromServices] IHttpClientFactory httpClientFactory,
+            CancellationToken cancellationToken) =>
         {
-            ActivityTimeout = TimeSpan.FromSeconds(100)
-        };
-        var httpClient = new HttpMessageInvoker(new SocketsHttpHandler
-        {
-            UseProxy = false,
-            AllowAutoRedirect = false,
-            AutomaticDecompression = DecompressionMethods.None,
-            UseCookies = false,
-            EnableMultipleHttp2Connections = true,
-            ActivityHeadersPropagator = new ReverseProxyPropagator(DistributedContextPropagator.Current),
-            ConnectTimeout = TimeSpan.FromSeconds(15),
-        });
-
-        endpoints
-            .Map("/api/{*rest}", async (HttpContext context, [FromServices] IHttpForwarder forwarder, [FromServices] ILoggerFactory loggerFactory) =>
+            var access = await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+            if (string.IsNullOrEmpty(access))
             {
-                var error = await forwarder
-                .SendAsync(
-                    context,
-                    apiEndpoint,
-                    httpClient,
-                    requestConfig,
-                    transformer);
+                return Results.Unauthorized();
+            }
 
-                if (error != ForwarderError.None)
+            var client = httpClientFactory.CreateClient("ApiProxy");
+            var request = new HttpRequestMessage(
+            new HttpMethod(context.Request.Method),
+                $"{apiEndpoint.TrimEnd('/')}{context.Request.Path}{context.Request.QueryString}");
+
+            foreach (var (key, headers) in context.Request.Headers)
+            {
+                foreach (var h in headers)
                 {
-                    var errorFeature = context.GetForwarderErrorFeature();
-                    var exception = errorFeature?.Exception;
-
-                    if (exception != null)
-                    {
-                        var logger = loggerFactory.CreateLogger("YARP");
-
-                        logger.LogError(exception.Message);
-                        logger.LogError(exception.StackTrace);
-                    }
+                    request.Headers.TryAddWithoutValidation(key, h);
                 }
-            })
-            .RequireAuthorization();
+            }
 
+            var response = await client.SendAsync(request, cancellationToken);
+
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return Results.Text(content);
+            }
+
+            Console.WriteLine(content);
+
+            return Results.BadRequest(new Response
+            {
+                Errors = [$"{response.StatusCode}", content]
+            });
+        })
+        .RequireAuthorization();
         return endpoints;
     }
 

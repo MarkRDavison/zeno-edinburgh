@@ -26,6 +26,7 @@ public static class DependencyInjectionExtensions
 
         return services;
     }
+
     public static IServiceCollection UseCookieOidcAuth(
         this IServiceCollection services,
         AuthAppSettings authAppSettings)
