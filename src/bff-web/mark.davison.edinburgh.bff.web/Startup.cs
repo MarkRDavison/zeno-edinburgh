@@ -1,6 +1,7 @@
 ﻿using mark.davison.common.CQRS;
 using mark.davison.common.server.abstractions.Authentication;
 using mark.davison.common.server.abstractions.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace mark.davison.edinburgh.bff.web;
@@ -72,7 +73,7 @@ public class Startup
     {
         endpoints.MapGet(
             path,
-            async (HttpContext context, IOptions<AppSettings> options, IHttpClientFactory httpClientFactory, ICurrentUserContext currentUserContext, CancellationToken cancellationToken) =>
+            async (HttpContext context, [FromServices] IOptions<AppSettings> options, [FromServices] IHttpClientFactory httpClientFactory, [FromServices] ICurrentUserContext currentUserContext, CancellationToken cancellationToken) =>
             {
                 if (string.IsNullOrEmpty(currentUserContext.Token))
                 {
