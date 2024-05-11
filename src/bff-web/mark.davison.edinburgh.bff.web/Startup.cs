@@ -1,6 +1,7 @@
 ﻿using mark.davison.common.CQRS;
 using mark.davison.common.server.abstractions.Repository;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -53,6 +54,10 @@ public class Startup
         }
 
         app
+            .UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            })
             .UseMiddleware<RequestResponseLoggingMiddleware>()
             .UseRouting()
             .UseAuthentication()
