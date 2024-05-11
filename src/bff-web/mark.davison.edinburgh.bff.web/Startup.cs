@@ -62,9 +62,9 @@ public class Startup
                 //MapProxyCQRSGet(endpoints, "/api/startup-query");
 
                 // TODO: Works but seems slow?
-                endpoints.Map("/api/{**catchall}", async context =>
+                endpoints.Map("/api/{**catchall}", async (HttpContext context, [FromServices] IHttpClientFactory httpClientFactory) =>
                 {
-                    using var httpClient = new HttpClient();
+                    var client = httpClientFactory.CreateClient("PROXY");
                     var targetUri = new Uri(AppSettings.API_ORIGIN + context.Request.Path);
 
                     var targetRequestMessage = new HttpRequestMessage();
@@ -78,7 +78,7 @@ public class Startup
                     }
 
                     // Send the request to the target server
-                    var responseMessage = await httpClient.SendAsync(targetRequestMessage);
+                    var responseMessage = await client.SendAsync(targetRequestMessage);
 
                     // Copy the response back to the original client
                     context.Response.StatusCode = (int)responseMessage.StatusCode;
