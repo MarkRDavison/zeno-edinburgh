@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="markdavison.common.server" Version="8.3.2" />
+    <PackageReference Include="markdavison.common.source.generators" Version="8.3.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\mark.davison.edinburgh.shared.commands\mark.davison.edinburgh.shared.commands.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.edinburgh.shared.queries\mark.davison.edinburgh.shared.queries.csproj" />
+    <ProjectReference Include="..\migrations\mark.davison.edinburgh.api.migrations.postgres\mark.davison.edinburgh.api.migrations.postgres.csproj" />
+    <ProjectReference Include="..\migrations\mark.davison.edinburgh.api.migrations.sqlite\mark.davison.edinburgh.api.migrations.sqlite.csproj" />
+  </ItemGroup>
+
+</Project>
