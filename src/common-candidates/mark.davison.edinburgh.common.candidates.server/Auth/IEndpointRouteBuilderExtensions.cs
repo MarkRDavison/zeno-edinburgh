@@ -24,7 +24,7 @@ public static class IEndpointRouteBuilderExtensions
                 new HttpMethod(context.Request.Method),
                 $"{apiEndpoint.TrimEnd('/')}{context.Request.Path}{context.Request.QueryString}");
 
-            request.Headers.TryAddWithoutValidation(HeaderNames.Authorization, access_token);
+            request.Headers.TryAddWithoutValidation(HeaderNames.Authorization, $"Bearer {access_token}");
 
             var response = await client.SendAsync(request, cancellationToken);
 
