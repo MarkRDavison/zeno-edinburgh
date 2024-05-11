@@ -23,8 +23,8 @@ public class Startup
             .ConfigureHealthCheckServices()
             .AddAuthorization()
             .AddEndpointsApiExplorer()
-            .AddSwaggerGen()
-            .AddReverseProxy();
+            .AddSwaggerGen();
+        //.AddReverseProxy();
 
     }
 
@@ -59,9 +59,10 @@ public class Startup
                 endpoints
                     .MapHealthChecks();
 
-                //MapProxyCQRSGet(endpoints, "/api/startup-query");
+                MapProxyCQRSGet(endpoints, "/api/startup-query");
+
                 endpoints
-                    .UseApiProxy(AppSettings.API_ORIGIN)
+                    //.UseApiProxy(AppSettings.API_ORIGIN)
                     .UseAuthEndpoints(AppSettings.WEB_ORIGIN);
             });
     }
