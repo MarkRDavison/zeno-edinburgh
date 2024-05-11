@@ -8,7 +8,7 @@ api:
   replicas: 1
   name: zeno-project-api
   image: ghcr.io/markrdavison/markdavison-edinburgh-api
-  tag: v0.0.9
+  tag: v0.0.10
   port: 50000
   ingress:
     host: project-api.markdavison.kiwi
@@ -41,7 +41,7 @@ bffweb:
   replicas: 1
   name: zeno-project-bff
   image: ghcr.io/markrdavison/markdavison-edinburgh-bff-web
-  tag: v0.0.9
+  tag: v0.0.10
   port: 40000
   ingress:
     host: project-bff.markdavison.kiwi
@@ -71,7 +71,7 @@ web:
   replicas: 1
   name: zeno-project-web
   image: ghcr.io/markrdavison/markdavison-edinburgh-web
-  tag: v0.0.9
+  tag: v0.0.10
   port: 80
   ingress:
     host: project.markdavison.kiwi
