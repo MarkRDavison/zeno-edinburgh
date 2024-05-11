@@ -59,36 +59,36 @@ public class Startup
                 endpoints
                     .MapHealthChecks();
 
-                //MapProxyCQRSGet(endpoints, "/api/startup-query");
+                MapProxyCQRSGet(endpoints, "/api/startup-query");
 
                 // TODO: Works but seems slow?
-                endpoints.Map("/api/{**catchall}", async (HttpContext context, [FromServices] IHttpClientFactory httpClientFactory) =>
-                {
-                    var client = httpClientFactory.CreateClient("PROXY");
-                    var targetUri = new Uri(AppSettings.API_ORIGIN + context.Request.Path);
-
-                    var targetRequestMessage = new HttpRequestMessage();
-                    targetRequestMessage.RequestUri = targetUri;
-                    targetRequestMessage.Method = new HttpMethod(context.Request.Method);
-
-                    // Copying the headers from the incoming request to the target request
-                    foreach (var header in context.Request.Headers)
-                    {
-                        targetRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
-                    }
-
-                    // Send the request to the target server
-                    var responseMessage = await client.SendAsync(targetRequestMessage);
-
-                    // Copy the response back to the original client
-                    context.Response.StatusCode = (int)responseMessage.StatusCode;
-                    foreach (var header in responseMessage.Headers)
-                    {
-                        context.Response.Headers[header.Key] = header.Value.ToArray();
-                    }
-
-                    await responseMessage.Content.CopyToAsync(context.Response.Body);
-                });
+                //endpoints.Map("/api/{**catchall}", async (HttpContext context, [FromServices] IHttpClientFactory httpClientFactory) =>
+                //{
+                //    var client = httpClientFactory.CreateClient("PROXY");
+                //    var targetUri = new Uri(AppSettings.API_ORIGIN + context.Request.Path);
+                //
+                //    var targetRequestMessage = new HttpRequestMessage();
+                //    targetRequestMessage.RequestUri = targetUri;
+                //    targetRequestMessage.Method = new HttpMethod(context.Request.Method);
+                //
+                //    // Copying the headers from the incoming request to the target request
+                //    foreach (var header in context.Request.Headers)
+                //    {
+                //        targetRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                //    }
+                //
+                //    // Send the request to the target server
+                //    var responseMessage = await client.SendAsync(targetRequestMessage);
+                //
+                //    // Copy the response back to the original client
+                //    context.Response.StatusCode = (int)responseMessage.StatusCode;
+                //    foreach (var header in responseMessage.Headers)
+                //    {
+                //        context.Response.Headers[header.Key] = header.Value.ToArray();
+                //    }
+                //
+                //    await responseMessage.Content.CopyToAsync(context.Response.Body);
+                //});
 
                 endpoints
                     //.UseApiProxy(AppSettings.API_ORIGIN)
