@@ -38,6 +38,8 @@ public class Startup
                 .AllowCredentials()
                 .AllowAnyHeader());
 
+        app.UseHttpsRedirection();
+
         if (env.IsDevelopment())
         {
             app.UseSwagger();
