@@ -2,7 +2,7 @@ global:
   ingress:
     hostname: prod-ingress.markdavison.kiwi
     certIssuer: letsencrypt-staging
-    proxyBufferSize: 32k
+    proxyBufferSize: 64k
 api:
   app: zeno-project-api
   replicas: 1
