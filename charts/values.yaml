@@ -70,7 +70,7 @@ web:
   replicas: 1
   name: zeno-project-web
   image: ghcr.io/markrdavison/markdavison-edinburgh-web
-  tag: v0.0.28
+  tag: v0.0.1
   port: 80
   ingress:
     host: project.markdavison.kiwi
