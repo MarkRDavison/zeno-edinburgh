@@ -49,6 +49,21 @@ public static class DependencyInjectionExtensions
                     ClockSkew = TimeSpan.FromSeconds(0)
                 };
 
+                _.Events = new()
+                {
+                    OnRedirectToIdentityProvider = async (Microsoft.AspNetCore.Authentication.OpenIdConnect.RedirectContext ctx) =>
+                    {
+                        Console.WriteLine("RedirectUri: {0}", ctx.ProtocolMessage.RedirectUri);
+
+                        if (ctx.ProtocolMessage.RedirectUri.StartsWith("http://"))
+                        {
+                            ctx.ProtocolMessage.RedirectUri = ctx.ProtocolMessage.RedirectUri.Replace("http://", "https://");
+                        }
+
+                        await Task.CompletedTask;
+                    }
+                };
+
                 _.ResponseType = OpenIdConnectResponseType.Code;
                 _.GetClaimsFromUserInfoEndpoint = true;
                 _.SaveTokens = true;
