@@ -51,16 +51,14 @@ public static class DependencyInjectionExtensions
 
                 _.Events = new()
                 {
-                    OnRedirectToIdentityProvider = async (Microsoft.AspNetCore.Authentication.OpenIdConnect.RedirectContext ctx) =>
+                    OnRedirectToIdentityProvider = (ctx) =>
                     {
-                        Console.WriteLine("RedirectUri: {0}", ctx.ProtocolMessage.RedirectUri);
-
-                        if (ctx.ProtocolMessage.RedirectUri.StartsWith("http://"))
+                        if (ctx.ProtocolMessage.RedirectUri.StartsWith(AuthConstants.HttpProto))
                         {
-                            ctx.ProtocolMessage.RedirectUri = ctx.ProtocolMessage.RedirectUri.Replace("http://", "https://");
+                            ctx.ProtocolMessage.RedirectUri = ctx.ProtocolMessage.RedirectUri.Replace(AuthConstants.HttpProto, AuthConstants.HttpsProto);
                         }
 
-                        await Task.CompletedTask;
+                        return Task.CompletedTask;
                     }
                 };
 

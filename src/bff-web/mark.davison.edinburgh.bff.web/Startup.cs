@@ -1,11 +1,4 @@
-﻿using mark.davison.common.CQRS;
-using mark.davison.common.server.abstractions.Repository;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-
-namespace mark.davison.edinburgh.bff.web;
+﻿namespace mark.davison.edinburgh.bff.web;
 
 public class Startup
 {
@@ -30,8 +23,8 @@ public class Startup
             .ConfigureHealthCheckServices()
             .AddAuthorization()
             .AddEndpointsApiExplorer()
-            .AddSwaggerGen();
-        //.AddReverseProxy();
+            .AddSwaggerGen()
+            .AddReverseProxy();
 
     }
 
@@ -44,8 +37,6 @@ public class Startup
                 .AllowAnyMethod()
                 .AllowCredentials()
                 .AllowAnyHeader());
-
-        app.UseHttpsRedirection();
 
         if (env.IsDevelopment())
         {
@@ -68,9 +59,9 @@ public class Startup
                 endpoints
                     .MapHealthChecks();
 
-                MapProxyCQRSGet(endpoints, "/api/startup-query");
+                //MapProxyCQRSGet(endpoints, "/api/startup-query");
                 endpoints
-                    //.UseApiProxy(AppSettings.API_ORIGIN)
+                    .UseApiProxy(AppSettings.API_ORIGIN)
                     .UseAuthEndpoints(AppSettings.WEB_ORIGIN);
             });
     }
