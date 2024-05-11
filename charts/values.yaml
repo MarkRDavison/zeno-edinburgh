@@ -23,10 +23,16 @@ api:
       EDINBURGH__AUTH__SESSION_NAME: edinburgh
       EDINBURGH__AUTH__SCOPE: openid profile email offline_access zeno-edinburgh
       EDINBURGH__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      EDINBURGH__CLAIMS__OIDC_ID_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
+      EDINBURGH__CLAIMS__OIDC_EMAIL_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+      EDINBURGH__CLAIMS__OIDC_FIRST_NAME_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
+      EDINBURGH__CLAIMS__OIDC_LAST_NAME_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname
+      EDINBURGH__CLAIMS__OIDC_USERNAME_ATTRIBUTE: preferred_username
       EDINBURGH__DATABASE__DATABASE_TYPE: postgres
       EDINBURGH__DATABASE__DB_DATABASE: project
       EDINBURGH__DATABASE__DB_PORT: 5432
       EDINBURGH__DATABASE__DB_HOST: postgres.markdavison.kiwi
+      EDINBURGH__REDIS__PORT: '6379'
       EDINBURGH__REDIS__HOST: redis.markdavison.kiwi
       EDINBURGH__PRODUCTION_MODE: true
 bffweb:
@@ -48,11 +54,16 @@ bffweb:
       EDINBURGH__AUTH__SESSION_NAME: edinburgh
       EDINBURGH__AUTH__SCOPE: openid profile email offline_access zeno-edinburgh
       EDINBURGH__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      EDINBURGH__CLAIMS__OIDC_ID_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
+      EDINBURGH__CLAIMS__OIDC_EMAIL_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+      EDINBURGH__CLAIMS__OIDC_FIRST_NAME_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
+      EDINBURGH__CLAIMS__OIDC_LAST_NAME_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname
+      EDINBURGH__CLAIMS__OIDC_USERNAME_ATTRIBUTE: preferred_username
       EDINBURGH__REDIS__PORT: '6379'
+      EDINBURGH__REDIS__HOST: redis.markdavison.kiwi
       EDINBURGH__WEB_ORIGIN: https://project.markdavison.kiwi
       EDINBURGH__BFF_ORIGIN: https://project-bff.markdavison.kiwi
       EDINBURGH__API_ORIGIN: https://project-api.markdavison.kiwi
-      EDINBURGH__REDIS__HOST: redis.markdavison.kiwi
       EDINBURGH__PRODUCTION_MODE: true
 web:
   app: zeno-project-web
