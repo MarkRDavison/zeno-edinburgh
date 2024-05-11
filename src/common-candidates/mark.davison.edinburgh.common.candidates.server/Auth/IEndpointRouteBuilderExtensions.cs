@@ -20,11 +20,16 @@ public static class IEndpointRouteBuilderExtensions
 
             var client = httpClientFactory.CreateClient("ApiProxy");
             var request = new HttpRequestMessage(
-            new HttpMethod(context.Request.Method),
+                new HttpMethod(context.Request.Method),
                 $"{apiEndpoint.TrimEnd('/')}{context.Request.Path}{context.Request.QueryString}");
 
             foreach (var (key, headers) in context.Request.Headers)
             {
+                if (key == HeaderNames.Cookie)
+                {
+                    continue;
+                }
+
                 foreach (var h in headers)
                 {
                     request.Headers.TryAddWithoutValidation(key, h);
@@ -40,11 +45,9 @@ public static class IEndpointRouteBuilderExtensions
                 return Results.Text(content);
             }
 
-            Console.WriteLine(content);
-
             return Results.BadRequest(new Response
             {
-                Errors = [$"{response.StatusCode}", content]
+                Errors = ["BAD_REQUEST", $"{response.StatusCode}", content]
             });
         })
         .RequireAuthorization();
