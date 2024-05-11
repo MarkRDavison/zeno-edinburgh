@@ -42,7 +42,6 @@ bffweb:
     secret:
       - REDIS__PASSWORD
       - AUTH__CLIENT_SECRET
-      - AUTH__SESSION_SECRET
     public:
       EDINBURGH__URL: http://0.0.0.0:40000
       EDINBURGH__AUTH__CLIENT_ID: zeno-edinburgh
