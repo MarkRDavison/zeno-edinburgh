@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\mark.davison.edinburgh.shared.models.dto\mark.davison.edinburgh.shared.models.dto.csproj" />
+    <ProjectReference Include="..\..\api\mark.davison.edinburgh.api.persistence\mark.davison.edinburgh.api.persistence.csproj" />
   </ItemGroup>
 
 </Project>

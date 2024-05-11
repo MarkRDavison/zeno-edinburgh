@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.bffweb.app }}-svc
+  labels:
+    app.kubernetes.io/name: {{ .Values.bffweb.app }}-svc
+    app.kubernetes.io/version: {{ .Values.bffweb.tag }}
+    app.kubernetes.io/part-of: zeno-project
+spec:
+  ports:
+  - port: {{ .Values.bffweb.port }}
+    targetPort: {{ .Values.bffweb.port }}
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name:  {{ .Values.bffweb.app }}

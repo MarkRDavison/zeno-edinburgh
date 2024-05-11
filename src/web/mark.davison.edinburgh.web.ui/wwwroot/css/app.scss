@@ -30,3 +30,8 @@ h1:focus {
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
+
+.app-title {
+    margin-left: 1rem !important;
+    margin-right: 3rem !important;
+}

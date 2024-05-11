@@ -1,0 +1,28 @@
+﻿@inject IAuthenticationContext _authContext
+@inject IDispatcher _dispatcher
+
+@if (_authContext.IsAuthenticated)
+{
+    <MudContainer Class="pa-4">
+        <MudPaper Class="pa-4">
+            @ChildContent
+        </MudPaper>
+    </MudContainer>
+}
+
+@code {
+
+    [Parameter, EditorRequired]
+    public RenderFragment? ChildContent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (_authContext.IsAuthenticated)
+        {
+            _dispatcher.Dispatch(new FetchStartupAction());
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}

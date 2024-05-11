@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.bffweb.app}}-dep
+  labels:
+    app.kubernetes.io/name: {{ .Values.bffweb.app }}-dep
+    app.kubernetes.io/version: {{ .Values.bffweb.tag }}
+    app.kubernetes.io/part-of: zeno-project
+spec:
+  replicas: {{ .Values.bffweb.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name:  {{ .Values.bffweb.app }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.bffweb.app }}
+        app.kubernetes.io/version: {{ .Values.bffweb.tag }}
+        app.kubernetes.io/part-of: zeno-project
+    spec:
+      containers:
+      - name: {{ .Values.bffweb.name }}
+        image: {{ .Values.bffweb.image }}:{{ .Values.bffweb.tag }}
+        imagePullPolicy: Always
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: {{ .Values.bffweb.port }}
+          failureThreshold: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: {{ .Values.bffweb.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: {{ .Values.bffweb.port }}
+          successThreshold: 3
+        ports:
+        - containerPort: {{ .Values.bffweb.port }}
+        env:
+        {{- include "helpers.list-bff-deployment-env-variables" . | indent 10 }}

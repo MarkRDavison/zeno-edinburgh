@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api.app}}-dep
+  labels:
+    app.kubernetes.io/name: {{ .Values.api.app }}-dep
+    app.kubernetes.io/version: {{ .Values.api.tag }}
+    app.kubernetes.io/part-of: zeno-project
+spec:
+  replicas: {{ .Values.api.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name:  {{ .Values.api.app }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.api.app }}
+        app.kubernetes.io/version: {{ .Values.api.tag }}
+        app.kubernetes.io/part-of: zeno-project
+    spec:
+      containers:
+      - name: {{ .Values.api.name }}
+        image: {{ .Values.api.image }}:{{ .Values.api.tag }}
+        imagePullPolicy: Always
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: {{ .Values.api.port }}
+          failureThreshold: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: {{ .Values.api.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: {{ .Values.api.port }}
+          successThreshold: 3
+        ports:
+        - containerPort: {{ .Values.api.port }}
+        env:
+        {{- include "helpers.list-api-deployment-env-variables" . | indent 10 }}

@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\common-candidates\mark.davison.edinburgh.common.candidates.server\mark.davison.edinburgh.common.candidates.server.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.edinburgh.shared.models\mark.davison.edinburgh.shared.models.csproj" />
   </ItemGroup>
 

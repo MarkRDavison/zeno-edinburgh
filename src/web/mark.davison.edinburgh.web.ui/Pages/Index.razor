@@ -1,3 +1,23 @@
 ﻿@page "/"
+@using System.Text.Json
+@using Fluxor
+@using mark.davison.edinburgh.web.features.Store.StartupUseCase
+@inject IAuthenticationContext _authContext
+@inherits FluxorComponent
 
 <h1>Hello, world!</h1>
+<p>IsAuthenticated: <span>@_authContext.IsAuthenticated</span></p>
+<p>@JsonSerializer.Serialize(_authContext.User)</p>
+<br />
+<h3>Projects</h3>
+<ul>
+    @foreach (var project in StartupState.Value.ProjectNames)
+    {
+        <li>@project</li>
+    }
+</ul>
+
+@code {
+    [Inject]
+    public required IState<StartupState> StartupState { get; set; }
+}

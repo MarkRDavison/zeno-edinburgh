@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.bffweb.app}}-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.global.ingress.certIssuer }}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.global.ingress.hostname }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.bffweb.app }}-ingress
+    app.kubernetes.io/version: {{ .Values.bffweb.tag }}
+    app.kubernetes.io/part-of: zeno-project
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - {{ .Values.bffweb.ingress.host }}
+      secretName: {{ .Values.bffweb.app}}-tls
+  rules:
+  - host: {{ .Values.bffweb.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.bffweb.app}}-svc
+            port:
+              number: {{ .Values.bffweb.port }}

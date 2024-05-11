@@ -1,0 +1,124 @@
+name: publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-push-image-api:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4      
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MRD_GITHUB_PAT }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          file: ./Docker/api.dockerfile
+          context: ./src
+          push: true
+          tags: |
+            ghcr.io/markrdavison/markdavison-edinburgh-api:latest
+            ghcr.io/markrdavison/markdavison-edinburgh-api:${{ github.event.release.tag_name }}
+            
+  build-and-push-image-bff-web:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4      
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MRD_GITHUB_PAT }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          file: ./Docker/bff-web.dockerfile
+          context: ./src
+          push: true
+          tags: |
+            ghcr.io/markrdavison/markdavison-edinburgh-bff-web:latest
+            ghcr.io/markrdavison/markdavison-edinburgh-bff-web:${{ github.event.release.tag_name }}
+
+  build-and-push-image-web:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4      
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MRD_GITHUB_PAT }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          file: ./Docker/web.dockerfile
+          context: ./src
+          push: true
+          tags: |
+            ghcr.io/markrdavison/markdavison-edinburgh-web:latest
+            ghcr.io/markrdavison/markdavison-edinburgh-web:${{ github.event.release.tag_name }}
+
+  update-gitops:
+    needs: [build-and-push-image-api, build-and-push-image-api-jobs, build-and-push-image-api-orchestrator, build-and-push-image-bff-web, build-and-push-image-web]
+    
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4    
+        with:
+          ref: main
+          
+      - name: Replace values
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          commitChange: false
+          createPR: false
+          valueFile: ./charts/values.yaml
+          changes: |
+            {
+              "api.tag": "${{ github.event.release.tag_name }}",
+              "bffweb.tag": "${{ github.event.release.tag_name }}",
+              "web.tag": "${{ github.event.release.tag_name }}"
+            }
+
+      # Commit all changed files back to the repository
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: main
+          commit_message: Updating git ops [skip ci] - release for ${{ github.event.release.tag_name }}

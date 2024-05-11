@@ -1,0 +1,71 @@
+global:
+  ingress:
+    hostname: prod-ingress.markdavison.kiwi
+    certIssuer: letsencrypt-staging
+api:
+  app: zeno-project-api
+  replicas: 1
+  name: zeno-project-api
+  image: ghcr.io/markrdavison/markdavison-edinburgh-api
+  tag: v0.0.1
+  port: 50000
+  ingress:
+    host: project-api.markdavison.kiwi
+  env:
+    secret:
+      - AUTH__CLIENT_SECRET
+      - DATABASE__DB_USERNAME
+      - DATABASE__DB_PASSWORD
+      - REDIS__PASSWORD
+    public:
+      EDINBURGH__URL: http://0.0.0.0:50000
+      EDINBURGH__AUTH__CLIENT_ID: zeno-edinburgh
+      EDINBURGH__AUTH__SESSION_NAME: edinburgh
+      EDINBURGH__AUTH__SCOPE: openid profile email offline_access zeno-edinburgh
+      EDINBURGH__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      EDINBURGH__DATABASE__DATABASE_TYPE: postgres
+      EDINBURGH__DATABASE__DB_DATABASE: project
+      EDINBURGH__DATABASE__DB_PORT: 5432
+      EDINBURGH__DATABASE__DB_HOST: postgres.markdavison.kiwi
+      EDINBURGH__REDIS__HOST: redis.markdavison.kiwi
+      EDINBURGH__PRODUCTION_MODE: true
+bffweb:
+  app: zeno-project-bff
+  replicas: 1
+  name: zeno-project-bff
+  image: ghcr.io/markrdavison/markdavison-edinburgh-bff-web
+  tag: v0.0.1
+  port: 40000
+  ingress:
+    host: project-bff.markdavison.kiwi
+  env:
+    secret:
+      - REDIS__PASSWORD
+      - AUTH__CLIENT_SECRET
+      - AUTH__SESSION_SECRET
+    public:
+      EDINBURGH__URL: http://0.0.0.0:40000
+      EDINBURGH__AUTH__CLIENT_ID: zeno-edinburgh
+      EDINBURGH__AUTH__SESSION_NAME: edinburgh
+      EDINBURGH__AUTH__SCOPE: openid profile email offline_access zeno-edinburgh
+      EDINBURGH__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      EDINBURGH__REDIS__PORT: '6379'
+      EDINBURGH__WEB_ORIGIN: https://project.markdavison.kiwi
+      EDINBURGH__BFF_ORIGIN: https://project-bff.markdavison.kiwi
+      EDINBURGH__API_ORIGIN: https://project-api.markdavison.kiwi
+      EDINBURGH__REDIS__HOST: redis.markdavison.kiwi
+      EDINBURGH__PRODUCTION_MODE: true
+web:
+  app: zeno-project-web
+  replicas: 1
+  name: zeno-project-web
+  image: ghcr.io/markrdavison/markdavison-edinburgh-web
+  tag: v0.0.28
+  port: 80
+  ingress:
+    host: project.markdavison.kiwi
+  env:
+    secret: []
+    public:
+      WEB_PORT: '80'
+      BFF_BASE_URI: https://project-bff.markdavison.kiwi
