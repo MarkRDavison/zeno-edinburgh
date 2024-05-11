@@ -12,8 +12,9 @@ public static class IEndpointRouteBuilderExtensions
             [FromServices] IHttpClientFactory httpClientFactory,
             CancellationToken cancellationToken) =>
         {
-            var access = await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            if (string.IsNullOrEmpty(access))
+            var access_token = await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            if (string.IsNullOrEmpty(access_token))
             {
                 return Results.Unauthorized();
             }
@@ -23,18 +24,7 @@ public static class IEndpointRouteBuilderExtensions
                 new HttpMethod(context.Request.Method),
                 $"{apiEndpoint.TrimEnd('/')}{context.Request.Path}{context.Request.QueryString}");
 
-            foreach (var (key, headers) in context.Request.Headers)
-            {
-                if (key == HeaderNames.Cookie)
-                {
-                    continue;
-                }
-
-                foreach (var h in headers)
-                {
-                    request.Headers.TryAddWithoutValidation(key, h);
-                }
-            }
+            request.Headers.TryAddWithoutValidation(HeaderNames.Authorization, access_token);
 
             var response = await client.SendAsync(request, cancellationToken);
 
