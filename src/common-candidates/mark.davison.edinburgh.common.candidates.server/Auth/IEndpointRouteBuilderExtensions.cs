@@ -22,7 +22,10 @@ public static class IEndpointRouteBuilderExtensions
             var client = httpClientFactory.CreateClient("ApiProxy");
             var request = new HttpRequestMessage(
                 new HttpMethod(context.Request.Method),
-                $"{apiEndpoint.TrimEnd('/')}{context.Request.Path}{context.Request.QueryString}");
+                $"{apiEndpoint.TrimEnd('/')}{context.Request.Path}{context.Request.QueryString}")
+            {
+                Content = new StreamContent(context.Request.Body)
+            };
 
             request.Headers.TryAddWithoutValidation(HeaderNames.Authorization, $"Bearer {access_token}");
 
