@@ -1,7 +1,9 @@
-﻿namespace mark.davison.edinburgh.api.persistence;
+﻿using mark.davison.common.persistence;
+
+namespace mark.davison.edinburgh.api.persistence;
 
 [ExcludeFromCodeCoverage]
-public sealed class EdinburghDbContext : DbContext
+public sealed class EdinburghDbContext : DbContextBase<EdinburghDbContext>
 {
     public EdinburghDbContext(DbContextOptions options) : base(options)
     {

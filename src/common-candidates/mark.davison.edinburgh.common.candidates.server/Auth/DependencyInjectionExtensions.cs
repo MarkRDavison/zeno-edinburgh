@@ -2,7 +2,7 @@
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddJwtAuth(
+    public static IServiceCollection AddJwtAuth2(
         this IServiceCollection services,
         AuthAppSettings authAppSettings)
     {
@@ -27,18 +27,18 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
-    public static IServiceCollection UseCookieOidcAuth(
+    public static IServiceCollection UseCookieOidcAuth2(
         this IServiceCollection services,
         AuthAppSettings authAppSettings)
     {
         services
             .AddAuthentication(_ =>
             {
-                _.DefaultScheme = AuthConstants.CookiesScheme;
-                _.DefaultChallengeScheme = AuthConstants.OidcScheme;
-                _.DefaultSignOutScheme = AuthConstants.OidcScheme;
+                _.DefaultScheme = AuthConstants2.CookiesScheme;
+                _.DefaultChallengeScheme = AuthConstants2.OidcScheme;
+                _.DefaultSignOutScheme = AuthConstants2.OidcScheme;
             })
-            .AddOpenIdConnect(AuthConstants.OidcScheme, _ =>
+            .AddOpenIdConnect(AuthConstants2.OidcScheme, _ =>
             {
                 _.Authority = authAppSettings.AUTHORITY;
                 _.ClientId = authAppSettings.CLIENT_ID;
@@ -54,18 +54,18 @@ public static class DependencyInjectionExtensions
                 {
                     OnRedirectToIdentityProvider = (ctx) =>
                     {
-                        if (ctx.ProtocolMessage.RedirectUri.StartsWith(AuthConstants.HttpProto))
+                        if (ctx.ProtocolMessage.RedirectUri.StartsWith(AuthConstants2.HttpProto))
                         {
-                            ctx.ProtocolMessage.RedirectUri = ctx.ProtocolMessage.RedirectUri.Replace(AuthConstants.HttpProto, AuthConstants.HttpsProto);
+                            ctx.ProtocolMessage.RedirectUri = ctx.ProtocolMessage.RedirectUri.Replace(AuthConstants2.HttpProto, AuthConstants2.HttpsProto);
                         }
 
                         return Task.CompletedTask;
                     }
                 };
-
                 _.ResponseType = OpenIdConnectResponseType.Code;
                 _.GetClaimsFromUserInfoEndpoint = true;
                 _.SaveTokens = true;
+                _.UsePkce = true;
                 _.Scope.Clear();
 
                 foreach (var scope in authAppSettings.SCOPES)
@@ -73,19 +73,29 @@ public static class DependencyInjectionExtensions
                     _.Scope.Add(scope);
                 }
             })
-            .AddCookie(AuthConstants.CookiesScheme, _ =>
+            .AddCookie(AuthConstants2.CookiesScheme, _ =>
             {
                 _.ExpireTimeSpan = TimeSpan.FromHours(8);
                 _.SlidingExpiration = false;
+                _.AccessDeniedPath = "/failedcookie";
                 _.Cookie.Name = $"__{authAppSettings.SESSION_NAME}".ToLower();
                 _.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
                 _.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                _.LogoutPath = AuthConstants.LogoutPath;
-                _.LoginPath = AuthConstants.LoginPath;
+                _.Cookie.IsEssential = false;
+                _.LogoutPath = AuthConstants2.LogoutPath;
+                _.LoginPath = AuthConstants2.LoginPath;
+
+                _.Events = new()
+                {
+                    OnSignedIn = async (ctx) =>
+                    {
+                        await Task.CompletedTask;
+                    }
+                };
             });
 
         services
-            .AddHttpClient(AuthConstants.AuthHttpClient);
+            .AddHttpClient(AuthConstants2.AuthHttpClient);
 
         return services;
     }

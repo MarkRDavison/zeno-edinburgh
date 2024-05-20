@@ -1,8 +1,8 @@
 ﻿namespace mark.davison.edinburgh.common.candidates.server.Auth;
 
-public static class ClaimsPrincipalHelpers
+public static class ClaimsPrincipalHelpers2
 {
-    public static UserInfo? ExtractUserInfo(this ClaimsPrincipal claimsPrincipal, ClaimsAppSettings claimsSettings)
+    public static UserInfo? ExtractUserInfo(this ClaimsPrincipal claimsPrincipal, ClaimsAppSettings2 claimsSettings)
     {
         var idClaimValue = claimsPrincipal.Claims.FirstOrDefault(_ => _.Type == claimsSettings.OIDC_ID_ATTRIBUTE);
 

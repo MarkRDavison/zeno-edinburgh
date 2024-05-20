@@ -1,23 +1,23 @@
 ﻿namespace mark.davison.edinburgh.common.candidates.server.Auth;
 
-public class CheckAccessTokenValidityMiddleware
+public class CheckAccessTokenValidityMiddleware2
 {
     private readonly RequestDelegate _next;
     private readonly IOptions<AuthAppSettings> _authSettings;
     private readonly HttpClient _client;
-    public CheckAccessTokenValidityMiddleware(
+    public CheckAccessTokenValidityMiddleware2(
         RequestDelegate next,
         IOptions<AuthAppSettings> authSettings,
         IHttpClientFactory httpClientFactory)
     {
         _next = next;
         _authSettings = authSettings;
-        _client = httpClientFactory.CreateClient(AuthConstants.AuthHttpClient);
+        _client = httpClientFactory.CreateClient(AuthConstants2.AuthHttpClient);
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var expireAt = await context.GetTokenAsync(AuthConstants.ExpiresAtTokenParameter);
+        var expireAt = await context.GetTokenAsync(AuthConstants2.ExpiresAtTokenParameter);
         if (expireAt != null)
         {
             if (DateTime.TryParse(expireAt, null, DateTimeStyles.RoundtripKind, out var dateExpireAt))
@@ -67,17 +67,17 @@ public class CheckAccessTokenValidityMiddleware
                                 var expiresAt = DateTime.Now + TimeSpan.FromSeconds(tokenResult.ExpiresIn);
                                 tokens.Add(new AuthenticationToken
                                 {
-                                    Name = AuthConstants.ExpiresAtTokenParameter,
+                                    Name = AuthConstants2.ExpiresAtTokenParameter,
                                     Value = expiresAt.ToString("o", CultureInfo.InvariantCulture)
                                 });
-                                var info = await context.AuthenticateAsync(AuthConstants.CookiesScheme);
+                                var info = await context.AuthenticateAsync(AuthConstants2.CookiesScheme);
 
                                 if (info != null &&
                                     info.Properties != null &&
                                     info.Principal != null)
                                 {
                                     info.Properties.StoreTokens(tokens);
-                                    await context.SignInAsync(AuthConstants.CookiesScheme, info.Principal, info.Properties);
+                                    await context.SignInAsync(AuthConstants2.CookiesScheme, info.Principal, info.Properties);
                                     tokenRefreshFailure = false;
                                 }
                             }
@@ -86,8 +86,8 @@ public class CheckAccessTokenValidityMiddleware
 
                     if (tokenRefreshFailure)
                     {
-                        await context.SignOutAsync(AuthConstants.CookiesScheme);
-                        await context.SignOutAsync(AuthConstants.OidcScheme);
+                        await context.SignOutAsync(AuthConstants2.CookiesScheme);
+                        await context.SignOutAsync(AuthConstants2.OidcScheme);
 
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         return;

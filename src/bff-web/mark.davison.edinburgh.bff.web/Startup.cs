@@ -19,8 +19,8 @@ public class Startup
 
         services
             .AddCors()
-            .UseCookieOidcAuth(AppSettings.AUTH)
-            .ConfigureHealthCheckServices()
+            .UseCookieOidcAuth2(AppSettings.AUTH)
+            .AddHealthCheckServices()
             .AddAuthorization()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen();
@@ -50,13 +50,13 @@ public class Startup
             .UseMiddleware<RequestResponseLoggingMiddleware>()
             .UseRouting()
             .UseAuthentication()
-            .UseMiddleware<CheckAccessTokenValidityMiddleware>()
+            .UseMiddleware<CheckAccessTokenValidityMiddleware2>()
             .UseAuthorization()
             .UseEndpoints(endpoints =>
             {
                 endpoints
-                    .UseApiProxy(AppSettings.API_ORIGIN)
-                    .UseAuthEndpoints(AppSettings.WEB_ORIGIN)
+                    .UseApiProxy2(AppSettings.API_ORIGIN)
+                    .UseAuthEndpoints2(AppSettings.WEB_ORIGIN)
                     .MapHealthChecks();
             });
     }

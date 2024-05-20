@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.edinburgh.common.candidates.server.Auth;
 
-public static class AuthConstants
+public static class AuthConstants2
 {
     public const string AuthHttpClient = "Auth";
     public const string ExpiresAtTokenParameter = "expires_at";

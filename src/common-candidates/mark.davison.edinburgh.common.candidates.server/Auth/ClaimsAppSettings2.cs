@@ -1,8 +1,8 @@
 ﻿namespace mark.davison.edinburgh.common.candidates.server.Auth;
 
-public sealed class ClaimsAppSettings : IAppSettings
+public sealed class ClaimsAppSettings2 : IAppSettings
 {
-    public string SECTION => "CLAIMS";
+    public string SECTION => "CLAIMS2";
 
     public string OIDC_ID_ATTRIBUTE { get; set; } = string.Empty;
     public string OIDC_EMAIL_ATTRIBUTE { get; set; } = string.Empty;

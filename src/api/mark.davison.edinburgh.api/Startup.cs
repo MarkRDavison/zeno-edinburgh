@@ -1,4 +1,7 @@
-﻿namespace mark.davison.edinburgh.api;
+﻿using mark.davison.edinburgh.api.migrations.postgres;
+using mark.davison.edinburgh.api.migrations.sqlite;
+
+namespace mark.davison.edinburgh.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup
@@ -19,27 +22,20 @@ public class Startup
 
         Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
 
-        // TODO: retrieve these
-        AppSettings.DATABASE.MigrationAssemblyNames.Add(
-            DatabaseType.Postgres, "mark.davison.edinburgh.api.migrations.postgres");
-        AppSettings.DATABASE.MigrationAssemblyNames.Add(
-            DatabaseType.Sqlite, "mark.davison.edinburgh.api.migrations.sqlite");
-
-
         services
             .AddLogging()
-            .AddJwtAuth(AppSettings.AUTH)
+            .AddJwtAuth2(AppSettings.AUTH)
             .AddAuthorization()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddHttpContextAccessor()
             .AddScoped<ICurrentUserContext, CurrentUserContext>()
-            .ConfigureHealthCheckServices<InitializationHostedService>() // TODO: Rename Configure to Add
+            .AddHealthCheckServices<InitializationHostedService>() // TODO: Rename Configure to Add
             .AddCors()
             .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
-            .UseDatabase<EdinburghDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE); // TODO: UseDatabase should return IServiceCollection, and rename Use to Add
+            .AddDatabase<EdinburghDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(PostgresContextFactory), typeof(SqliteContextFactory)); // TODO: UseDatabase should return IServiceCollection, and rename Use to Add
 
-        services.UseCQRSServer();// TODO: UseCQRSServer should return IServiceCollection, and rename Use to Add
+        services.MapCQRSServer();// TODO: UseCQRSServer should return IServiceCollection, and rename Use to Add
 
         if (!string.IsNullOrEmpty(AppSettings.REDIS.HOST)) // TODO: Add a helperfor this
         {
@@ -84,7 +80,7 @@ public class Startup
             .UseRouting()
             .UseAuthentication()
             .UseAuthorization()
-            .UseMiddleware<PopulateUserContextMiddleware>()
+            .UseMiddleware<PopulateUserContextMiddleware2>()
             .UseEndpoints(endpoints =>
             {
                 endpoints
@@ -94,9 +90,9 @@ public class Startup
                     .ConfigureCQRSEndpoints(); // TODO: Rename Configure to Map
 
                 endpoints
-                    .UseGet<User>() // TODO: Rename Use to Map
-                    .UseGetById<User>()// TODO: Rename Use to Map
-                    .UsePost<User>();// TODO: Rename Use to Map
+                    .MapGet<User>() // TODO: Rename Use to Map
+                    .MapGetById<User>()// TODO: Rename Use to Map
+                    .MapPost<User>();// TODO: Rename Use to Map
             });
     }
 }

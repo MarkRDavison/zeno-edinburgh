@@ -3,7 +3,7 @@
 public static class IEndpointRouteBuilderExtensions
 {
 
-    public static IEndpointRouteBuilder UseApiProxy(
+    public static IEndpointRouteBuilder UseApiProxy2(
         this IEndpointRouteBuilder endpoints,
         string apiEndpoint)
     {
@@ -47,13 +47,14 @@ public static class IEndpointRouteBuilderExtensions
         return endpoints;
     }
 
-    public static IEndpointRouteBuilder UseAuthEndpoints(
+    public static IEndpointRouteBuilder UseAuthEndpoints2(
         this IEndpointRouteBuilder endpoints,
         string webOrigin)
     {
         endpoints
-            .MapGet("/auth/user", (HttpContext context, [FromServices] IOptions<ClaimsAppSettings> claimsSettings) =>
+            .MapGet("/auth/user", (HttpContext context, [FromServices] IOptions<ClaimsAppSettings2> claimsSettings) =>
             {
+                var cookies = context.Request.Cookies.ToList();
                 if (context.User?.Identity?.IsAuthenticated ?? false)
                 {
                     if (context.User.ExtractUserInfo(claimsSettings.Value) is var userInfo)
@@ -67,11 +68,11 @@ public static class IEndpointRouteBuilderExtensions
             .AllowAnonymous();
 
         endpoints
-            .MapGet(AuthConstants.LoginPath, async (HttpContext context, [FromQuery(Name = "returnUrl")] string? returnUrl) =>
+            .MapGet(AuthConstants2.LoginPath, async (HttpContext context, [FromQuery(Name = "returnUrl")] string? returnUrl) =>
             {
                 var prop = new AuthenticationProperties
                 {
-                    RedirectUri = returnUrl ?? webOrigin.TrimEnd('/') + AuthConstants.LoginCompletePath
+                    RedirectUri = returnUrl ?? webOrigin.TrimEnd('/') + AuthConstants2.LoginCompletePath
                 };
 
                 await context.ChallengeAsync(prop);
@@ -79,14 +80,14 @@ public static class IEndpointRouteBuilderExtensions
             .AllowAnonymous();
 
         endpoints
-            .MapGet(AuthConstants.LogoutPath, async (HttpContext context) =>
+            .MapGet(AuthConstants2.LogoutPath, async (HttpContext context) =>
             {
-                await context.SignOutAsync(AuthConstants.CookiesScheme);
+                await context.SignOutAsync(AuthConstants2.CookiesScheme);
                 var prop = new AuthenticationProperties
                 {
-                    RedirectUri = webOrigin.TrimEnd('/') + AuthConstants.LogoutCompletePath
+                    RedirectUri = webOrigin.TrimEnd('/') + AuthConstants2.LogoutCompletePath
                 };
-                await context.SignOutAsync(AuthConstants.OidcScheme, prop);
+                await context.SignOutAsync(AuthConstants2.OidcScheme, prop);
             })
             .RequireAuthorization();
 

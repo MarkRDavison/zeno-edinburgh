@@ -1,13 +1,13 @@
 ﻿namespace mark.davison.edinburgh.common.candidates.server.Auth;
 
-public sealed class PopulateUserContextMiddleware
+public sealed class PopulateUserContextMiddleware2
 {
     private readonly RequestDelegate _next;
-    private readonly IOptions<ClaimsAppSettings> _claimsSettings;
+    private readonly IOptions<ClaimsAppSettings2> _claimsSettings;
 
-    public PopulateUserContextMiddleware(
+    public PopulateUserContextMiddleware2(
         RequestDelegate next,
-        IOptions<ClaimsAppSettings> claimsSettings)
+        IOptions<ClaimsAppSettings2> claimsSettings)
     {
         _next = next;
         _claimsSettings = claimsSettings;
