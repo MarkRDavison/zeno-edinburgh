@@ -5,11 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="markdavison.common.persistence" Version="8.4.3" />
-  </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\mark.davison.edinburgh.api.models.configuration\mark.davison.edinburgh.api.models.configuration.csproj" />
   </ItemGroup>

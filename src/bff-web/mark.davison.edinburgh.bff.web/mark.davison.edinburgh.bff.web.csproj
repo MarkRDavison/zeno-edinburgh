@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common.server" Version="8.4.3" />
+    <PackageReference Include="markdavison.common.server" Version="8.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\common-candidates\mark.davison.edinburgh.common.candidates.server\mark.davison.edinburgh.common.candidates.server.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.edinburgh.shared.models.dto\mark.davison.edinburgh.shared.models.dto.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.edinburgh.shared.models\mark.davison.edinburgh.shared.models.csproj" />
   </ItemGroup>

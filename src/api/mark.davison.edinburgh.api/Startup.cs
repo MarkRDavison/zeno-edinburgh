@@ -23,39 +23,20 @@ public class Startup
         Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
 
         services
+            .AddCors()
             .AddLogging()
-            .AddJwtAuth2(AppSettings.AUTH)
+            .AddJwtAuth(AppSettings.AUTH)
             .AddAuthorization()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddHttpContextAccessor()
             .AddScoped<ICurrentUserContext, CurrentUserContext>()
-            .AddHealthCheckServices<InitializationHostedService>() // TODO: Rename Configure to Add
-            .AddCors()
+            .AddHealthCheckServices<InitializationHostedService>()
             .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
-            .AddDatabase<EdinburghDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(PostgresContextFactory), typeof(SqliteContextFactory)); // TODO: UseDatabase should return IServiceCollection, and rename Use to Add
-
-        services.MapCQRSServer();// TODO: UseCQRSServer should return IServiceCollection, and rename Use to Add
-
-        if (!string.IsNullOrEmpty(AppSettings.REDIS.HOST)) // TODO: Add a helperfor this
-        {
-
-            var config = new ConfigurationOptions
-            {
-                EndPoints = { AppSettings.REDIS.HOST + ":" + AppSettings.REDIS.PORT },
-                Password = AppSettings.REDIS.PASSWORD
-            };
-
-            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
-            services
-                .AddStackExchangeRedisCache(_ =>
-                {
-                    _.InstanceName = AppSettings.SECTION + "_" + (AppSettings.PRODUCTION_MODE ? "PROD_" : "DEV_");
-                    _.Configuration = redis.Configuration;
-                })
-                .AddSingleton(redis);
-            //.AddSingleton<IRedisService, RedisService>();
-        }
+            .AddDatabase<EdinburghDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(PostgresContextFactory), typeof(SqliteContextFactory))
+            .AddCoreDbContext<EdinburghDbContext>()
+            .AddCQRSServer()
+            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE);
 
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -80,19 +61,20 @@ public class Startup
             .UseRouting()
             .UseAuthentication()
             .UseAuthorization()
-            .UseMiddleware<PopulateUserContextMiddleware2>()
+            .UseMiddleware<PopulateUserContextMiddleware>()
             .UseEndpoints(endpoints =>
             {
                 endpoints
                     .MapHealthChecks();
 
                 endpoints
-                    .ConfigureCQRSEndpoints(); // TODO: Rename Configure to Map
+                    .MapGet<User>()
+                    .MapGetById<User>()
+                    .MapPost<User>();
 
                 endpoints
-                    .MapGet<User>() // TODO: Rename Use to Map
-                    .MapGetById<User>()// TODO: Rename Use to Map
-                    .MapPost<User>();// TODO: Rename Use to Map
+                    .MapCQRSEndpoints();
+
             });
     }
 }

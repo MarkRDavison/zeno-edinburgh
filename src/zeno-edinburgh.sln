@@ -13,14 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SHARED", "SHARED", "{F4451C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.edinburgh.api", "api\mark.davison.edinburgh.api\mark.davison.edinburgh.api.csproj", "{A7041412-75E7-4331-979C-60C2DDE150CA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "COMMON-CANDIDATES", "COMMON-CANDIDATES", "{08493DB5-DF94-4A72-95F4-F654F4A3B12F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.edinburgh.common.candidates.shared", "common-candidates\mark.davison.edinburgh.common.candidates.shared\mark.davison.edinburgh.common.candidates.shared.csproj", "{AEE2A03C-FB58-401A-B0C9-EAA4931D4BCD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.edinburgh.common.candidates.server", "common-candidates\mark.davison.edinburgh.common.candidates.server\mark.davison.edinburgh.common.candidates.server.csproj", "{2EBEA6BA-3685-4722-BF3E-06BC4C4320BF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.edinburgh.common.candidates.web", "common-candidates\mark.davison.edinburgh.common.candidates.web\mark.davison.edinburgh.common.candidates.web.csproj", "{52627FC7-D9C1-40AA-B656-E81C0C187C3E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.edinburgh.shared.models", "shared\mark.davison.edinburgh.shared.models\mark.davison.edinburgh.shared.models.csproj", "{C18D3C19-3FCE-4C17-BF16-88E7551ED727}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.edinburgh.shared.commands", "shared\mark.davison.edinburgh.shared.commands\mark.davison.edinburgh.shared.commands.csproj", "{8C912D91-1D04-4560-A8F7-F01041098B5C}"
@@ -63,18 +55,6 @@ Global
 		{A7041412-75E7-4331-979C-60C2DDE150CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7041412-75E7-4331-979C-60C2DDE150CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7041412-75E7-4331-979C-60C2DDE150CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEE2A03C-FB58-401A-B0C9-EAA4931D4BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEE2A03C-FB58-401A-B0C9-EAA4931D4BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEE2A03C-FB58-401A-B0C9-EAA4931D4BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEE2A03C-FB58-401A-B0C9-EAA4931D4BCD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2EBEA6BA-3685-4722-BF3E-06BC4C4320BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2EBEA6BA-3685-4722-BF3E-06BC4C4320BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2EBEA6BA-3685-4722-BF3E-06BC4C4320BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2EBEA6BA-3685-4722-BF3E-06BC4C4320BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52627FC7-D9C1-40AA-B656-E81C0C187C3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52627FC7-D9C1-40AA-B656-E81C0C187C3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52627FC7-D9C1-40AA-B656-E81C0C187C3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52627FC7-D9C1-40AA-B656-E81C0C187C3E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C18D3C19-3FCE-4C17-BF16-88E7551ED727}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C18D3C19-3FCE-4C17-BF16-88E7551ED727}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C18D3C19-3FCE-4C17-BF16-88E7551ED727}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,9 +109,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A7041412-75E7-4331-979C-60C2DDE150CA} = {B4B982E3-15F2-46D8-AB24-CB7216FDA7F5}
-		{AEE2A03C-FB58-401A-B0C9-EAA4931D4BCD} = {08493DB5-DF94-4A72-95F4-F654F4A3B12F}
-		{2EBEA6BA-3685-4722-BF3E-06BC4C4320BF} = {08493DB5-DF94-4A72-95F4-F654F4A3B12F}
-		{52627FC7-D9C1-40AA-B656-E81C0C187C3E} = {08493DB5-DF94-4A72-95F4-F654F4A3B12F}
 		{C18D3C19-3FCE-4C17-BF16-88E7551ED727} = {F4451C0A-D53A-492D-A352-2ECB213D6320}
 		{8C912D91-1D04-4560-A8F7-F01041098B5C} = {F4451C0A-D53A-492D-A352-2ECB213D6320}
 		{6774D36E-D4CA-49CA-B600-9459EC212CD6} = {4537FA29-D55E-4C8A-A94D-AB52F4A39477}
